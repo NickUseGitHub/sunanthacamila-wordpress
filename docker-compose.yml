@@ -40,3 +40,51 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: db473637065
+
+  logstash:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USER: wordpress
+      DB_PASSWORD: wordpress
+      DB_NAME: db473637065
+      ES_ENDPOINT: http://es:9200
+      XPACK_MONITORING_ENABLED: "false"
+    depends_on:
+      - db
+      - es
+    links:
+      - db
+      - es
+
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: elasticsearch
+    environment:
+      - xpack.security.enabled=false
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./elasticdata:/usr/share/elasticsearch/data
+      - ./docker-entrypoint-es-plugins.sh:/apps/docker-entrypoint-es-plugins.sh
+    ports:
+      - 9200:9200
+    entrypoint: /apps/docker-entrypoint-es-plugins.sh
+  
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:7.4.0
+    ports:
+      - "5601:5601"
+    depends_on:
+      - es
+    links:
+      - es

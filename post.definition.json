@@ -1,0 +1,121 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "autocomplete": {
+          "type": "custom",
+          "tokenizer": "icu_tokenizer",
+          "filter": [
+            "autocomplete_filter",
+            "lowercase"
+          ]
+        },
+        "stop_analyzer":{
+          "type":"custom",
+          "tokenizer":"icu_tokenizer",
+          "filter":[
+            "lowercase"
+          ]
+        },
+        "simple_search_analyzer" : {
+          "type":"custom",
+           "tokenizer" : "whitespace",
+           "filter" : [
+             "lowercase"
+            ]
+        },
+        "simple_index_analyzer": {
+          "type":"custom",
+          "tokenizer":"whitespace",
+          "filter":[
+            "lowercase",
+            "decimal_digit",
+            "thai_stop",
+            "preserve_word_delimiter"
+          ]
+        },
+        "custom_path_tree": {
+          "tokenizer": "custom_hierarchy"
+        },
+        "tag_analyzer": {
+          "type": "custom",
+          "tokenizer": "thai",
+          "filter": [
+            "lowercase",
+            "tag_shingle_filter",
+            "tag_thai_stop",
+            "thai_stop"
+          ]
+        }
+      },
+      "normalizer": {
+        "lowercase_normalizer": {
+          "type": "custom",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      },
+      "tokenizer": {
+        "custom_hierarchy": {
+          "type": "path_hierarchy",
+          "delimiter": "/"
+        }
+      },
+      "filter": {
+        "autocomplete_filter": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 20,
+          "token_chars": [
+            "letter",
+            "digit"
+          ]
+        },
+        "preserve_word_delimiter" : {
+          "type" : "word_delimiter",
+          "preserve_original": "true"
+        },
+        "thai_stop": {
+          "type": "stop",
+          "stopwords": "thai"
+        },
+        "tag_shingle_filter": {
+          "type": "shingle",
+          "min_shingle_size": 2,
+          "max_shingle_size": 3,
+          "output_unigrams": true
+        },
+        "tag_thai_stop": {
+          "type": "stop",
+          "stopwords": "_thai_"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "title": {
+        "type": "text",
+        "analyzer": "simple_search_analyzer"
+      },
+      "content": {
+        "type": "text",
+        "analyzer": "simple_index_analyzer",
+        "search_analyzer": "simple_search_analyzer"
+      },
+      "name": {
+        "type": "text"
+      },
+      "guid": {
+        "type": "text"
+      },
+      "post_type": {
+        "type": "keyword"
+      },
+      "mime_type": {
+        "type": "keyword"
+      }
+    }
+  }
+}
