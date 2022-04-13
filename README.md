@@ -17,3 +17,8 @@ cat <YOUR_PATH_FILE> | docker exec -i <CONTAINER_ID> /usr/bin/mysql -u root --de
 ![https://imgur.com/GLMjeSj](https://imgur.com/GLMjeSj.jpg)
 
 > Ref: [https://wordpress.org/support/topic/wordpress-home-url-redirects-to-localhost/](https://wordpress.org/support/topic/wordpress-home-url-redirects-to-localhost/)
+
+
+### getting-blank-page-when-trying-to-add-or-edit-posts-or-pages
+
+> Ref: [https://github.com/Yoast/wordpress-seo/issues/7531#issuecomment-368093697](https://github.com/Yoast/wordpress-seo/issues/7531#issuecomment-368093697)
