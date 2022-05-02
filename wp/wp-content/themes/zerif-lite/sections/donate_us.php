@@ -65,6 +65,22 @@
     grid-area: donate-stripe;
   }
 
+  .donate-form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .donate-form .btn-donate-stripe-container {
+    cursor: pointer;
+    border-radius: 3px;
+    border: 2px solid #635bff;
+    margin-top: 5px;
+  }
+
+  .btn-donate-stripe {
+    height: 30px;
+  }
+
 </style>
 
 <section class="donate-us" id="donate-us">
@@ -84,12 +100,11 @@
       </div>
       <div class="stripe">
         <form class="donate-form" onclick="return false;">
-          <div class="form-group">
-            <label>Amount ($ USD)</label>
-            <input type="number" name="amount" step="1" min="1">
+          <input type="number" name="amount" step="1" min="1" placeholder="$0.00 USD">
+          <div class="btn-donate-stripe-container">
+            <span>Pay with</span>
+            <img class="btn-donate-stripe" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png">
           </div>
-
-          <button class="btn-donate-stripe" type="submit">Pay with stripe</button>
         </form>
       </div>
     </div>
@@ -102,15 +117,17 @@
 
   stripeDonateButton.addEventListener('click', () => {
     const stripe = Stripe('<STRIPE_PUBLIC_KEY');
-    const backendUrl = '<BACKEND_URL>'
+    const backendUrl = '<BACKEND_URL>';
     const formData = new FormData(document.querySelector(".donate-form"));
     const domainUrl = window.location.href;
     const cancel_url = domainUrl + "cancel_url";
     const success_url = domainUrl + "success_url";
+    const amount = Number(formData.get("amount")) * 100;
 
-    formData.set("name", "Sununthacamila Donation");
-    formData.set("cancel_url", cancel_url);
-    formData.set("success_url", success_url);
+    if (amount < 1) {
+      alert("Please insert valid Amount number");
+      return;
+    }
     
     fetch(backendUrl, {
       method: 'POST',
